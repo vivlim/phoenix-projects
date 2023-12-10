@@ -1,4 +1,5 @@
 defmodule Treechat.MessageTree do
+  require Logger
   @moduledoc """
   The MessageTree context.
   """
@@ -50,6 +51,7 @@ defmodule Treechat.MessageTree do
 
   """
   def create_chat_message(attrs \\ %{}) do
+    Logger.debug "message_tree.create_chat_message attrs: #{inspect(attrs)}"
     %ChatMessage{}
     |> ChatMessage.changeset(attrs)
     |> Repo.insert()

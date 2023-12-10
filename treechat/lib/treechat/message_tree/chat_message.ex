@@ -1,6 +1,7 @@
 defmodule Treechat.MessageTree.ChatMessage do
   use Ecto.Schema
   import Ecto.Changeset
+  require Logger
 
   schema "posts" do
     field :content, :string
@@ -13,8 +14,11 @@ defmodule Treechat.MessageTree.ChatMessage do
 
   @doc false
   def changeset(chat_message, attrs) do
+    Logger.debug "changeset: {chat_message: #{inspect(chat_message)}, attrs: #{inspect(attrs)}}"
     chat_message
-    |> cast(attrs, [:content, :created])
-    |> validate_required([:content, :created])
+    # filter down the set of attrs to the relevant ones
+    |> cast(attrs, [:content, :created, :author])
+    # validate the attrs
+    |> validate_required([:content, :created, :author])
   end
 end

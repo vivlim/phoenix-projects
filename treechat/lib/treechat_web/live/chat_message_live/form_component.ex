@@ -20,7 +20,10 @@ defmodule TreechatWeb.ChatMessageLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <span>author: <%={@chat_message.author.email}%></span>
+        <!--<.inputs_for :let={author_form} field={@form[:author]}>
+          <.input field={author_form[:email]} type="text" />
+        </.inputs_for>-->
+        <.input field={@form[:author]} type="id" label="author id" />
         <.input field={@form[:content]} type="text" label="Content" />
         <.input field={@form[:created]} type="datetime-local" label="Created" />
         <:actions>
@@ -30,6 +33,8 @@ defmodule TreechatWeb.ChatMessageLive.FormComponent do
     </div>
     """
   end
+  # removed this but the author is there, just not sure how to render it in the template.
+  # <span>author: <%={@chat_message.author.email}%></span>
 
   @impl true
   def update(%{chat_message: chat_message} = assigns, socket) do
@@ -72,7 +77,8 @@ defmodule TreechatWeb.ChatMessageLive.FormComponent do
   end
 
   defp save_chat_message(socket, :new, chat_message_params) do
-    case MessageTree.create_chat_message(%{chat_message_params | author: socket.assigns.current_user}) do
+    Logger.debug "save_chat_message assigns: #{inspect(socket.assigns)}"
+    case MessageTree.create_chat_message(chat_message_params) do
       {:ok, chat_message} ->
         notify_parent({:saved, chat_message})
 
