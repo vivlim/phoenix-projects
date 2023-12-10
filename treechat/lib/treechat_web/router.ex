@@ -21,13 +21,6 @@ defmodule TreechatWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-
-    live "/posts", ChatMessageLive.Index, :index
-    live "/posts/new", ChatMessageLive.Index, :new
-    live "/posts/:id/edit", ChatMessageLive.Index, :edit
-
-    live "/posts/:id", ChatMessageLive.Show, :show
-    live "/posts/:id/show/edit", ChatMessageLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.
@@ -75,6 +68,15 @@ defmodule TreechatWeb.Router do
       on_mount: [{TreechatWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+
+
+      live "/posts", ChatMessageLive.Index, :index
+      live "/posts/new", ChatMessageLive.Index, :new
+      live "/posts/:id/edit", ChatMessageLive.Index, :edit
+
+      live "/posts/:id", ChatMessageLive.Show, :show
+      live "/posts/:id/show/edit", ChatMessageLive.Show, :edit
     end
   end
 
