@@ -1,0 +1,4 @@
+# https://hexdocs.pm/phoenix/1.6.15/mix_phx_gen_auth.html
+mix phx.gen.auth Accounts User users --live
+
+mix phx.gen.live MessageTree ChatMessage posts author:references:users content:text created:utc_datetime parent:references:posts

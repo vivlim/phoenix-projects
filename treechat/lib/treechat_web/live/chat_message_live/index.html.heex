@@ -1,0 +1,42 @@
+<.header>
+  Listing Posts
+  <:actions>
+    <.link patch={~p"/posts/new"}>
+      <.button>New Chat message</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="posts"
+  rows={@streams.posts}
+  row_click={fn {_id, chat_message} -> JS.navigate(~p"/posts/#{chat_message}") end}
+>
+  <:col :let={{_id, chat_message}} label="Content"><%= chat_message.content %></:col>
+  <:col :let={{_id, chat_message}} label="Created"><%= chat_message.created %></:col>
+  <:action :let={{_id, chat_message}}>
+    <div class="sr-only">
+      <.link navigate={~p"/posts/#{chat_message}"}>Show</.link>
+    </div>
+    <.link patch={~p"/posts/#{chat_message}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, chat_message}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: chat_message.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="chat_message-modal" show on_cancel={JS.patch(~p"/posts")}>
+  <.live_component
+    module={TreechatWeb.ChatMessageLive.FormComponent}
+    id={@chat_message.id || :new}
+    title={@page_title}
+    action={@live_action}
+    chat_message={@chat_message}
+    patch={~p"/posts"}
+  />
+</.modal>
