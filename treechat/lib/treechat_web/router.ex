@@ -2,7 +2,6 @@ defmodule TreechatWeb.Router do
   use TreechatWeb, :router
 
   import TreechatWeb.UserAuth
-  alias TreechatWeb.ChatMessageLive, as: ChatMessageLive
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -22,14 +21,14 @@ defmodule TreechatWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+
+    live "/posts", ChatMessageLive.Index, :index
+    live "/posts/new", ChatMessageLive.Index, :new
+    live "/posts/:id/edit", ChatMessageLive.Index, :edit
+
+    live "/posts/:id", ChatMessageLive.Show, :show
+    live "/posts/:id/show/edit", ChatMessageLive.Show, :edit
   end
-
-  live "/posts", ChatMessageLive.Index, :index
-  live "/posts/new", ChatMessageLive.Index, :new
-  live "/posts/:id/edit", ChatMessageLive.Index, :edit
-
-  live "/posts/:id", ChatMessageLive.Show, :show
-  live "/posts/:id/show/edit", ChatMessageLive.Show, :edit
 
   # Other scopes may use custom stacks.
   # scope "/api", TreechatWeb do
