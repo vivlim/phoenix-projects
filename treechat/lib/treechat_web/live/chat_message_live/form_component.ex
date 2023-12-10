@@ -1,5 +1,6 @@
 defmodule TreechatWeb.ChatMessageLive.FormComponent do
   use TreechatWeb, :live_component
+  require Logger
 
   alias Treechat.MessageTree
 
@@ -19,6 +20,7 @@ defmodule TreechatWeb.ChatMessageLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
+        <span>author: <%={@chat_message.author.email}%></span>
         <.input field={@form[:content]} type="text" label="Content" />
         <.input field={@form[:created]} type="datetime-local" label="Created" />
         <:actions>
@@ -50,6 +52,7 @@ defmodule TreechatWeb.ChatMessageLive.FormComponent do
   end
 
   def handle_event("save", %{"chat_message" => chat_message_params}, socket) do
+    Logger.debug "handle_event save assigns: #{inspect(socket.assigns)}"
     save_chat_message(socket, socket.assigns.action, chat_message_params)
   end
 
@@ -69,7 +72,7 @@ defmodule TreechatWeb.ChatMessageLive.FormComponent do
   end
 
   defp save_chat_message(socket, :new, chat_message_params) do
-    case MessageTree.create_chat_message(chat_message_params) do
+    case MessageTree.create_chat_message(%{chat_message_params | author: socket.assigns.current_user}) do
       {:ok, chat_message} ->
         notify_parent({:saved, chat_message})
 
