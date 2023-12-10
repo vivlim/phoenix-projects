@@ -1,5 +1,6 @@
 defmodule Treechat.MessageTree do
   require Logger
+  require DateTime
   @moduledoc """
   The MessageTree context.
   """
@@ -52,7 +53,9 @@ defmodule Treechat.MessageTree do
   """
   def create_chat_message(attrs \\ %{}) do
     Logger.debug "message_tree.create_chat_message attrs: #{inspect(attrs)}"
-    %ChatMessage{}
+    # create the new message and set its creation time.
+    # truncate to nearest second
+    %ChatMessage{created: DateTime.utc_now(:second)}
     |> ChatMessage.changeset(attrs)
     |> Repo.insert()
   end

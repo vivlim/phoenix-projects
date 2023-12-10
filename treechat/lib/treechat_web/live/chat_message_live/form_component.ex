@@ -25,7 +25,6 @@ defmodule TreechatWeb.ChatMessageLive.FormComponent do
         </.inputs_for>-->
         <.input field={@form[:author]} type="id" label="author id" />
         <.input field={@form[:content]} type="text" label="Content" />
-        <.input field={@form[:created]} type="datetime-local" label="Created" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Chat message</.button>
         </:actions>
