@@ -7,7 +7,7 @@ defmodule Treechat.MessageTree.ChatMessage do
     field :content, :string
     field :created, :utc_datetime
     field :author, :id
-    field :parent, :id
+    #has_many :parent_msg, ChatMessage, foreign_key: :parent
 
     timestamps(type: :utc_datetime)
   end

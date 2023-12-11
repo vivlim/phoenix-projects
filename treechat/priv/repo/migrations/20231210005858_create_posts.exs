@@ -6,12 +6,10 @@ defmodule Treechat.Repo.Migrations.CreatePosts do
       add :content, :text
       add :created, :utc_datetime
       add :author, references(:users, on_delete: :nothing)
-      add :parent, references(:posts, on_delete: :nothing)
 
       timestamps(type: :utc_datetime)
     end
 
     create index(:posts, [:author])
-    create index(:posts, [:parent])
   end
 end
