@@ -12,7 +12,7 @@
   rows={@streams.posts}
   row_click={fn {_id, chat_message} -> JS.navigate(~p"/posts/#{chat_message}") end}
 >
-  <:col :let={{_id, chat_message}} label="Author"><%= chat_message.author %></:col>
+  <:col :let={{_id, chat_message}} label="Author"><%= chat_message.author.id %></:col>
   <:col :let={{_id, chat_message}} label="Content"><%= chat_message.content %></:col>
   <:col :let={{_id, chat_message}} label="Created"><%= chat_message.created %></:col>
   <:action :let={{_id, chat_message}}>

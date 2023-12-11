@@ -27,7 +27,7 @@ defmodule TreechatWeb.ChatMessageLive.Index do
     Logger.debug "apply_action new assigns: #{inspect(socket.assigns)}"
     socket
     |> assign(:page_title, "New Chat message")
-    |> assign(:chat_message, %ChatMessage{author: socket.assigns.current_user.id}) # must pass the current user into the new chat message here, the form doesn't have access to global assigns
+    |> assign(:chat_message, %ChatMessage{author: socket.assigns.current_user, author_id: socket.assigns.current_user.id}) # must pass the current user into the new chat message here, the form doesn't have access to global assigns
   end
 
   defp apply_action(socket, :index, _params) do

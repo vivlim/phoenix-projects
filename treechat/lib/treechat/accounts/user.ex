@@ -1,4 +1,5 @@
 defmodule Treechat.Accounts.User do
+  require Logger
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -154,5 +155,19 @@ defmodule Treechat.Accounts.User do
     else
       add_error(changeset, :current_password, "is not valid")
     end
+  end
+
+  @spec posting_changeset(
+          {map(), map()}
+          | %{
+              :__struct__ => atom() | %{:__changeset__ => map(), optional(any()) => any()},
+              optional(atom()) => any()
+            },
+          :invalid | %{optional(:__struct__) => none(), optional(atom() | binary()) => any()}
+        ) :: Ecto.Changeset.t()
+  def posting_changeset(user, params) do
+    Logger.debug("posting_changeset: #{inspect(user)}, was passed #{inspect(params)}")
+    user
+    |> cast(params, []) # do not actually allow modifying the user based on post currently (probably postcount could go up though)
   end
 end

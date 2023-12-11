@@ -21,6 +21,7 @@ defmodule Treechat.MessageTree do
   """
   def list_posts do
     Repo.all(ChatMessage)
+    |> Repo.preload(:author)
   end
 
   @doc """
@@ -37,7 +38,10 @@ defmodule Treechat.MessageTree do
       ** (Ecto.NoResultsError)
 
   """
-  def get_chat_message!(id), do: Repo.get!(ChatMessage, id)
+  def get_chat_message!(id) do
+    Repo.get!(ChatMessage, id)
+    |> Repo.preload(:author)
+  end
 
   @doc """
   Creates a chat_message.
@@ -53,9 +57,14 @@ defmodule Treechat.MessageTree do
   """
   def create_chat_message(attrs \\ %{}) do
     Logger.debug "message_tree.create_chat_message attrs: #{inspect(attrs)}"
+
+    # get the author
+    author = Treechat.Accounts.User
+    |> Repo.get!(attrs["author"]["id"])
+
     # create the new message and set its creation time.
     # truncate to nearest second
-    %ChatMessage{created: DateTime.utc_now(:second)}
+    %ChatMessage{created: DateTime.utc_now(:second), author_id: author.id, author: author}
     |> ChatMessage.changeset(attrs)
     |> Repo.insert()
   end

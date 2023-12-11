@@ -1,0 +1,4 @@
+[ecto docs](https://hexdocs.pm/ecto/associations.html#has-one-belongs-to)
+[ecto sql](https://hexdocs.pm/ecto_sql/3.11.1/Ecto.Migration.html#references/2)
+https://hexdocs.pm/ecto/Ecto.Changeset.html#put_assoc/4-example-adding-a-comment-to-a-post
+https://dashbit.co/blog/working-with-ecto-associations-and-embeds
