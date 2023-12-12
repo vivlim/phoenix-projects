@@ -24,7 +24,7 @@ defmodule TreechatWeb.ChatMessageLive.FormComponent do
       >
         <.inputs_for :let={author_form} field={@form[:author]}>
         <!-- any user fields here would be modifiable. -->
-          <!--<.input field={author_form[:id]} type="text" />-->
+          <.input field={author_form[:status_msg]} type="text" label="User status message" />
         </.inputs_for>
 
         <span>author: <%= @chat_message.author.email %></span>

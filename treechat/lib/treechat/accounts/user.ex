@@ -5,6 +5,7 @@ defmodule Treechat.Accounts.User do
 
   schema "users" do
     field :email, :string
+    field :status_msg, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
@@ -168,6 +169,6 @@ defmodule Treechat.Accounts.User do
   def posting_changeset(user, params) do
     Logger.debug("posting_changeset: #{inspect(user)}, was passed #{inspect(params)}")
     user
-    |> cast(params, []) # do not actually allow modifying the user based on post currently (probably postcount could go up though)
+    |> cast(params, [:status_msg])
   end
 end
