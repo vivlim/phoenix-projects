@@ -1,10 +1,12 @@
 defmodule SmolForum.Forum.Board do
   use Ecto.Schema
   import Ecto.Changeset
+  alias SmolForum.Forum.Thread
 
   schema "forum_boards" do
     field :name, :string
     field :last_post_id, :id
+    has_many :threads, Thread
 
     timestamps(type: :utc_datetime)
   end
