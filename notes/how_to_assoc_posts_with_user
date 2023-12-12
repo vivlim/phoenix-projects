@@ -1,0 +1,42 @@
+how i associated posts with an authoring user
+
+## Changes made
+- To the `MessageTree` that contains `ChatMessage`s:
+    - When listing or getting `ChatMessage`s, preload `:author`
+    - When creating `ChatMessage`s:
+        - fetch `attrs["author"]["id"]` and obtain the `User` with that id from the repo. (❓ is there a better way to do this?)
+        - when constructing the `ChatMessage`, include both `author` and `author_id` from the obtained `User`
+- To the `ChatMessage`:
+    - Update schema to declare a post `belongs_to` a `:author` `User`
+- To the chat message's live form component (`ChatMessageLive.FormComponent`)
+    - Add `.inputs_for` referencing the `:author` field, which will show any needed user-related fields
+        - Currently this is just a 'user status' field, added mostly to exercise `cast_assoc`
+        - But `.inputs_for` *must* still be there in order for the `author` that's passed into the form to come out of it when it's time to create the changeset.
+- To the chat message index liveview (`ChatMessageLive.Index`)
+    - When handling the `:new` action, create a `ChatMessage` that contains the current user as `:author` and `:author_id`. This ChatMessage's data backs the live form component.
+    - to its' template (`index.html.heex`):
+        - Add a column to the table that shows the author's email (in `067a858` it's `id` but i change it immediately after)
+- To the `create_posts` migration:
+    - Make sure the column that exists in the db table has a name ending in `_id` since that's the default for ecto
+- **Optional changes if you don't need to commit any modifications back to the `User`**
+    - To `User`s:
+        - Added a function for building a 'posting' changeset for a user.
+            - this currently does nothing (casts an empty changeset)
+            - required to `cast_assoc` a `ChatMessage`'s `:author`, in case we had made any changes to the user that should be committed back to them (currently, we don't.)
+    - To `ChatMessage.changeset/2`:
+            - Preload `:author` on the passed-in `chat_message`
+            - `cast` the fields (? nomenclature?) that are *not* related to the author association
+            - `cast_assoc` `:author` using the 'posting' changeset function that was added to `User`. This updates the `ChatMessage`'s changeset to reflect the specified author, as well as optionally creating a `User` changeset to commit any changes back to them (which there are none currently).
+
+## Understanding of overall flow of creating a post
+1. User clicks on the "New Chat Message" button.
+2. A `ChatMessage` is created containing the current user's ID, assigned to `:author_id`.
+2b. On that `ChatMessage`, `Repo.preload(:author)` to get fresh user data (not just whatever is currently in the socket assigns)
+3. That new `ChatMessage` is used to instantiate a new live form component. `:author` is not visible in the form, but is still tracked by it, because it's used in a `.inputs_for` tag.
+4. The user types post content and pushes the save button.
+5. MessageTree.create_chat_message is called, attributes are passed to it from the form.
+6. One of those attributes is the author, including its id. Obtain the `User` by that ID from `Repo`
+7. Create a base `ChatMessage` that contains `:author`, `:author_id`, as well as the current time (`:created`)
+8. (optional if you don't want to commit changes back to the user) Create a changeset that applies the form data to `ChatMessage`. Inside of that, preload `:author` and cast_assoc
+9. The new message is inserted
+
