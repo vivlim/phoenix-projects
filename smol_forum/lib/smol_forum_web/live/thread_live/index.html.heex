@@ -1,0 +1,40 @@
+<.header>
+  Listing Forum threads
+  <:actions>
+    <.link patch={~p"/forum_threads/new"}>
+      <.button>New Thread</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="forum_threads"
+  rows={@streams.forum_threads}
+  row_click={fn {_id, thread} -> JS.navigate(~p"/forum_threads/#{thread}") end}
+>
+  <:action :let={{_id, thread}}>
+    <div class="sr-only">
+      <.link navigate={~p"/forum_threads/#{thread}"}>Show</.link>
+    </div>
+    <.link patch={~p"/forum_threads/#{thread}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, thread}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: thread.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal :if={@live_action in [:new, :edit]} id="thread-modal" show on_cancel={JS.patch(~p"/forum_threads")}>
+  <.live_component
+    module={SmolForumWeb.ThreadLive.FormComponent}
+    id={@thread.id || :new}
+    title={@page_title}
+    action={@live_action}
+    thread={@thread}
+    patch={~p"/forum_threads"}
+  />
+</.modal>

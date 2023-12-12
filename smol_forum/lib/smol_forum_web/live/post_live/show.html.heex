@@ -1,0 +1,29 @@
+<.header>
+  Post <%= @post.id %>
+  <:subtitle>This is a post record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/forum_posts/#{@post}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit post</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Subject"><%= @post.subject %></:item>
+  <:item title="Content"><%= @post.content %></:item>
+  <:item title="Created"><%= @post.created %></:item>
+  <:item title="Modified"><%= @post.modified %></:item>
+</.list>
+
+<.back navigate={~p"/forum_posts"}>Back to forum_posts</.back>
+
+<.modal :if={@live_action == :edit} id="post-modal" show on_cancel={JS.patch(~p"/forum_posts/#{@post}")}>
+  <.live_component
+    module={SmolForumWeb.PostLive.FormComponent}
+    id={@post.id}
+    title={@page_title}
+    action={@live_action}
+    post={@post}
+    patch={~p"/forum_posts/#{@post}"}
+  />
+</.modal>

@@ -1,0 +1,25 @@
+<.header>
+  Thread <%= @thread.id %>
+  <:subtitle>This is a thread record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/forum_threads/#{@thread}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit thread</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+</.list>
+
+<.back navigate={~p"/forum_threads"}>Back to forum_threads</.back>
+
+<.modal :if={@live_action == :edit} id="thread-modal" show on_cancel={JS.patch(~p"/forum_threads/#{@thread}")}>
+  <.live_component
+    module={SmolForumWeb.ThreadLive.FormComponent}
+    id={@thread.id}
+    title={@page_title}
+    action={@live_action}
+    thread={@thread}
+    patch={~p"/forum_threads/#{@thread}"}
+  />
+</.modal>
