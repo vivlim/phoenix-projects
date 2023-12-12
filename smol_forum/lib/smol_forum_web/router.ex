@@ -25,6 +25,7 @@ defmodule SmolForumWeb.Router do
     live "/forum_boards", BoardLive.Index, :index
     live "/forum_boards/new", BoardLive.Index, :new
     live "/forum_boards/:id/edit", BoardLive.Index, :edit
+    live "/forum_boards/:id/new_thread", BoardLive.Show, :new_thread
 
     live "/forum_boards/:id", BoardLive.Show, :show
     live "/forum_boards/:id/show/edit", BoardLive.Show, :edit

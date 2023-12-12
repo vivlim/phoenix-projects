@@ -2,6 +2,7 @@ defmodule SmolForum.Forum.Board do
   use Ecto.Schema
   import Ecto.Changeset
   alias SmolForum.Forum.Thread
+  require Logger
 
   schema "forum_boards" do
     field :name, :string
@@ -13,6 +14,7 @@ defmodule SmolForum.Forum.Board do
 
   @doc false
   def changeset(board, attrs) do
+    Logger.debug "board.changeset: #{inspect(board)} | #{inspect(attrs)}"
     board
     |> cast(attrs, [:name])
     |> validate_required([:name])

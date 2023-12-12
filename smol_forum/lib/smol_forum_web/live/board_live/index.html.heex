@@ -39,3 +39,14 @@
     patch={~p"/forum_boards"}
   />
 </.modal>
+<.modal :if={@live_action in [:new, :new_thread]} id="post-modal" show on_cancel={JS.patch(~p"/forum_boards/#{@board}")}>
+  <.live_component
+    module={SmolForumWeb.PostLive.FormComponent}
+    id={@board.id || :new}
+    title={@page_title}
+    action={@live_action}
+    board={@board}
+    patch={~p"/forum_boards/#{@board}"}
+  />
+</.modal>
+

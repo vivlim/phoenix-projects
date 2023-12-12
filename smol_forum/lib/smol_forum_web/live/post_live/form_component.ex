@@ -19,10 +19,14 @@ defmodule SmolForumWeb.PostLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
+        <.inputs_for :let={thread_form} field={@form[:thread]}>
+          <.inputs_for :let={board_form} field={thread_form[:board]}>
+            <.input field={board_form[:name]} type="text" label="Board name" disabled/>
+          </.inputs_for>
+        </.inputs_for>
+
         <.input field={@form[:subject]} type="text" label="Subject" />
         <.input field={@form[:content]} type="text" label="Content" />
-        <.input field={@form[:created]} type="datetime-local" label="Created" />
-        <.input field={@form[:modified]} type="datetime-local" label="Modified" />
         <:actions>
           <.button phx-disable-with="Saving...">Save Post</.button>
         </:actions>
@@ -68,6 +72,10 @@ defmodule SmolForumWeb.PostLive.FormComponent do
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
     end
+  end
+
+  defp save_post(socket, :new_thread, post_params) do
+    save_post(socket, :new, post_params)
   end
 
   defp save_post(socket, :new, post_params) do

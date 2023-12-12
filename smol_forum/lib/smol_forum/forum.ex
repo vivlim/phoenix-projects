@@ -50,7 +50,11 @@ defmodule SmolForum.Forum do
 
   """
   def create_post(attrs \\ %{}) do
-    %Post{}
+    board = SmolForum.Forum.Board
+    |> SmolForum.Repo.get!(attrs["thread"]["board"]["id"])
+    thread = %SmolForum.Forum.Thread{board_id: board.id, board: board}
+    # todo get existing thread if there is one
+    %Post{thread: thread}
     |> Post.changeset(attrs)
     |> Repo.insert()
   end

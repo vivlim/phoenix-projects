@@ -16,7 +16,9 @@ defmodule SmolForum.Forum.Post do
   @doc false
   def changeset(post, attrs) do
     post
+    #|> SmolForum.Repo.preload(:thread)
     |> cast(attrs, [:subject, :content])
     |> validate_required([:subject, :content])
+    |> cast_assoc(:thread, with: &SmolForum.Forum.Thread.changeset/2)
   end
 end

@@ -5,6 +5,9 @@
     <.link patch={~p"/forum_boards/#{@board}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit board</.button>
     </.link>
+    <.link patch={~p"/forum_boards/#{@board}/new_thread"} phx-click={JS.push_focus()}>
+      <.button>New thread</.button>
+    </.link>
   </:actions>
 </.header>
 
@@ -21,6 +24,17 @@
     title={@page_title}
     action={@live_action}
     board={@board}
+    patch={~p"/forum_boards/#{@board}"}
+  />
+</.modal>
+
+<.modal :if={@live_action == :new_thread} id="new_thread-modal" show on_cancel={JS.patch(~p"/forum_boards/#{@board}")}>
+  <.live_component
+    module={SmolForumWeb.PostLive.FormComponent}
+    id={:new}
+    title={@page_title}
+    action={@live_action}
+    post={@post}
     patch={~p"/forum_boards/#{@board}"}
   />
 </.modal>
