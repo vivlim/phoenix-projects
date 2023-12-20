@@ -56,9 +56,9 @@ defmodule SmolForum.Forum do
   def create_post(attrs \\ %{}) do
     board = SmolForum.Forum.Board
     |> SmolForum.Repo.get!(attrs["thread"]["board"]["id"])
-    thread = %SmolForum.Forum.Thread{board_id: board.id, board: board}
     author = SmolForum.Accounts.User
     |> Repo.get!(attrs["author"]["id"])
+    thread = %SmolForum.Forum.Thread{board_id: board.id, board: board, author_id: author.id, author: author, subject: attrs["subject"]}
     # todo get existing thread if there is one
     %Post{thread: thread, author_id: author.id, author: author}
     |> Post.changeset(attrs)
@@ -131,10 +131,8 @@ defmodule SmolForum.Forum do
     Preload the threads belonging to a board.
   """
   def get_board_threads!(board_id) do
-    posts_query = from p in Post, order_by: p.inserted_at#, preload: [:author]
-    query = from t in Thread, where: t.board_id == ^board_id, preload: [posts: ^posts_query]
+    query = from t in Thread, where: t.board_id == ^board_id, preload: [:author]
     Repo.all(query)
-    |> Enum.map(&Thread.with_first_post_info/1)
     # board
     # |> Repo.preload([threads: [posts: from(p in Post, order_by: p.inserted_at, limit: 2)]])
     #SmolForum.Forum.Thread
