@@ -17,6 +17,7 @@
 
 <.table
   id="forum_threads"
+  :if={@live_action != :new_thread}
   rows={@streams.board_threads}
   row_click={fn {_id, thread} -> JS.navigate(~p"/forum_threads/#{thread}") end}
 >

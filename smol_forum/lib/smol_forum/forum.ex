@@ -19,6 +19,7 @@ defmodule SmolForum.Forum do
   """
   def list_forum_posts do
     Repo.all(Post)
+    |> Repo.preload(:author)
   end
 
   @doc """
@@ -35,7 +36,10 @@ defmodule SmolForum.Forum do
       ** (Ecto.NoResultsError)
 
   """
-  def get_post!(id), do: Repo.get!(Post, id)
+  def get_post!(id) do
+    Repo.get!(Post, id)
+    |> Repo.preload(:author)
+  end
 
   @doc """
   Creates a post.
@@ -53,8 +57,10 @@ defmodule SmolForum.Forum do
     board = SmolForum.Forum.Board
     |> SmolForum.Repo.get!(attrs["thread"]["board"]["id"])
     thread = %SmolForum.Forum.Thread{board_id: board.id, board: board}
+    author = SmolForum.Accounts.User
+    |> Repo.get!(attrs["author"]["id"])
     # todo get existing thread if there is one
-    %Post{thread: thread}
+    %Post{thread: thread, author_id: author.id, author: author}
     |> Post.changeset(attrs)
     |> Repo.insert()
   end
@@ -125,7 +131,7 @@ defmodule SmolForum.Forum do
     Preload the threads belonging to a board.
   """
   def get_board_threads!(board_id) do
-    posts_query = from p in Post, order_by: p.inserted_at
+    posts_query = from p in Post, order_by: p.inserted_at#, preload: [:author]
     query = from t in Thread, where: t.board_id == ^board_id, preload: [posts: ^posts_query]
     Repo.all(query)
     |> Enum.map(&Thread.with_first_post_info/1)
@@ -137,7 +143,7 @@ defmodule SmolForum.Forum do
 
   def get_thread_posts!(thread_id) do
     # todo: preload authors
-    query = from p in Post, where: p.thread_id == ^thread_id#, preload: [:author]
+    query = from p in Post, where: p.thread_id == ^thread_id, preload: [:author]
     Repo.all(query)
     # board
     # |> Repo.preload([threads: [posts: from(p in Post, order_by: p.inserted_at, limit: 2)]])

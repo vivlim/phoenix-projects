@@ -1,6 +1,7 @@
 defmodule SmolForumWeb.PostLive.Index do
   use SmolForumWeb, :live_view
 
+  alias SmolForum.Repo
   alias SmolForum.Forum
   alias SmolForum.Forum.Post
 
@@ -21,9 +22,11 @@ defmodule SmolForumWeb.PostLive.Index do
   end
 
   defp apply_action(socket, :new, _params) do
+    form_data = %Post{author_id: socket.assigns.current_user.id}
+    |> Repo.preload(:author)
     socket
     |> assign(:page_title, "New Post")
-    |> assign(:post, %Post{})
+    |> assign(:post, form_data) # must pass the current user into the new chat message here, the form doesn't have access to global assigns
   end
 
   defp apply_action(socket, :index, _params) do

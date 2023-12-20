@@ -25,7 +25,6 @@ defmodule SmolForumWeb.Router do
     live "/forum_boards", BoardLive.Index, :index
     live "/forum_boards/new", BoardLive.Index, :new
     live "/forum_boards/:id/edit", BoardLive.Index, :edit
-    live "/forum_boards/:id/new_thread", BoardLive.Show, :new_thread
 
     live "/forum_boards/:id", BoardLive.Show, :show
     live "/forum_boards/:id/show/edit", BoardLive.Show, :edit
@@ -91,6 +90,9 @@ defmodule SmolForumWeb.Router do
       on_mount: [{SmolForumWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+
+
+      live "/forum_boards/:id/new_thread", BoardLive.Show, :new_thread
     end
   end
 

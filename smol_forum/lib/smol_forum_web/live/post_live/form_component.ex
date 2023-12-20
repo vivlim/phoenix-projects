@@ -19,6 +19,10 @@ defmodule SmolForumWeb.PostLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
+        <.inputs_for :let={_author_form} field={@form[:author]}>
+        <!-- needed so the author is captured in the form -->
+        </.inputs_for>
+
         <.inputs_for :let={thread_form} field={@form[:thread]}>
           <.inputs_for :let={board_form} field={thread_form[:board]}>
             <.input field={board_form[:name]} type="text" label="Board name" disabled/>

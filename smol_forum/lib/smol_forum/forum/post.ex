@@ -2,11 +2,12 @@ defmodule SmolForum.Forum.Post do
   use Ecto.Schema
   import Ecto.Changeset
   alias SmolForum.Forum.Thread
+  alias SmolForum.Accounts.User
 
   schema "forum_posts" do
     field :content, :string
     field :subject, :string
-    field :author_id, :id
+    belongs_to :author, User
 
     belongs_to :thread, Thread
 

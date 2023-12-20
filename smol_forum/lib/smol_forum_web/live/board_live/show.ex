@@ -1,6 +1,8 @@
 defmodule SmolForumWeb.BoardLive.Show do
   use SmolForumWeb, :live_view
+  require Logger
 
+  alias SmolForum.Repo
   alias SmolForum.Forum
   alias SmolForum.Forum.Board
   alias SmolForum.Forum.Thread
@@ -23,9 +25,11 @@ defmodule SmolForumWeb.BoardLive.Show do
   end
 
   defp apply_action(socket, :new_thread, %{"id" => id}) do
+    Logger.debug "new_thread assigns: #{inspect(socket.assigns)}"
     board = Forum.get_board!(id)
     thread = %Thread{board: board}
-    post = %Post{thread: thread}
+    post = %Post{thread: thread, author_id: socket.assigns.current_user.id}
+    |> Repo.preload(:author)
     socket
     |> assign(:page_title, "New thread")
     |> assign(:board, board)
