@@ -122,6 +122,19 @@ defmodule SmolForum.Forum do
   end
 
   @doc """
+    Preload the threads belonging to a board.
+  """
+  def get_board_threads!(board_id) do
+    posts_query = from p in Post, order_by: p.inserted_at, limit: 2
+    query = from t in Thread, where: t.board_id == ^board_id, preload: [posts: ^posts_query]
+    Repo.all(query)
+    # board
+    # |> Repo.preload([threads: [posts: from(p in Post, order_by: p.inserted_at, limit: 2)]])
+    #SmolForum.Forum.Thread
+    # |> where([t], t.board_id == board_id)
+  end
+
+  @doc """
   Gets a single thread.
 
   Raises `Ecto.NoResultsError` if the Thread does not exist.

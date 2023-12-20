@@ -19,6 +19,7 @@ defmodule SmolForumWeb.BoardLive.Show do
     socket
     |> assign(:page_title, "Edit Board")
     |> assign(:board, Forum.get_board!(id))
+    |> assign(:threads, Forum.get_board!(id))
   end
 
   defp apply_action(socket, :new_thread, %{"id" => id}) do
@@ -32,9 +33,11 @@ defmodule SmolForumWeb.BoardLive.Show do
   end
 
   defp apply_action(socket, _, %{"id" => id}) do
+    board = Forum.get_board!(id)
     socket
+    |> stream(:board_threads, Forum.get_board_threads!(board.id))
     |> assign(:page_title, page_title(socket.assigns.live_action))
-    |> assign(:board, Forum.get_board!(id))
+    |> assign(:board, board)
   end
 
   defp page_title(:show), do: "Show Board"
