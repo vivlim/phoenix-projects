@@ -10,10 +10,13 @@ defmodule SmolForumWeb.ThreadLive.Show do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
+    thread = Forum.get_thread!(id)
     {:noreply,
      socket
+     |> stream(:posts, Forum.get_thread_posts!(thread.id))
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:thread, Forum.get_thread!(id))}
+     |> assign(:thread, thread)
+     |> assign(:first_post, List.first(thread.posts))}
   end
 
   defp page_title(:show), do: "Show Thread"

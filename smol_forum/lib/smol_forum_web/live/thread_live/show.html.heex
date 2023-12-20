@@ -9,7 +9,29 @@
 </.header>
 
 <.list>
+  <:item title="Subject"><%= @first_post.subject %></:item>
 </.list>
+
+<.table
+  id="forum_threads"
+  rows={@streams.posts}
+  row_click={fn {_id, post} -> JS.navigate(~p"/forum_posts/#{post}") end}
+>
+  <:col :let={{_id, post}} label="Author"><%= post.author_id %></:col>
+  <:col :let={{_id, post}} label="Subject"><%= post.subject %></:col>
+  <:col :let={{_id, post}} label="Content"><%= post.content %></:col>
+  <:action :let={{_id, post}}>
+    <.link patch={~p"/forum_posts/#{post}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, post}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: post.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
 
 <.back navigate={~p"/forum_threads"}>Back to forum_threads</.back>
 

@@ -125,8 +125,19 @@ defmodule SmolForum.Forum do
     Preload the threads belonging to a board.
   """
   def get_board_threads!(board_id) do
-    posts_query = from p in Post, order_by: p.inserted_at, limit: 2
+    posts_query = from p in Post, order_by: p.inserted_at
     query = from t in Thread, where: t.board_id == ^board_id, preload: [posts: ^posts_query]
+    Repo.all(query)
+    |> Enum.map(&Thread.with_first_post_info/1)
+    # board
+    # |> Repo.preload([threads: [posts: from(p in Post, order_by: p.inserted_at, limit: 2)]])
+    #SmolForum.Forum.Thread
+    # |> where([t], t.board_id == board_id)
+  end
+
+  def get_thread_posts!(thread_id) do
+    # todo: preload authors
+    query = from p in Post, where: p.thread_id == ^thread_id#, preload: [:author]
     Repo.all(query)
     # board
     # |> Repo.preload([threads: [posts: from(p in Post, order_by: p.inserted_at, limit: 2)]])
@@ -148,7 +159,16 @@ defmodule SmolForum.Forum do
       ** (Ecto.NoResultsError)
 
   """
-  def get_thread!(id), do: Repo.get!(Thread, id)
+  def get_thread!(id) do
+    #posts_query = from p in Post, order_by: p.inserted_at
+    posts_query = from p in Post, order_by: p.inserted_at, limit: 1
+    query = from t in Thread, preload: [posts: ^posts_query]
+    Repo.get!(query, id)
+    
+    # Repo.get!(Thread, id)
+    # |> Repo.preload([:posts])
+
+  end
 
   @doc """
   Creates a thread.
