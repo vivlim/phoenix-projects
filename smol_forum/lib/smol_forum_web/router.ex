@@ -22,26 +22,6 @@ defmodule SmolForumWeb.Router do
 
     get "/", PageController, :home
 
-    live "/forum_boards", BoardLive.Index, :index
-    live "/forum_boards/new", BoardLive.Index, :new
-    live "/forum_boards/:id/edit", BoardLive.Index, :edit
-
-    live "/forum_boards/:id", BoardLive.Show, :show
-    live "/forum_boards/:id/show/edit", BoardLive.Show, :edit
-
-    live "/forum_threads", ThreadLive.Index, :index
-    live "/forum_threads/new", ThreadLive.Index, :new
-    live "/forum_threads/:id/edit", ThreadLive.Index, :edit
-
-    live "/forum_threads/:id", ThreadLive.Show, :show
-    live "/forum_threads/:id/show/edit", ThreadLive.Show, :edit
-
-    live "/forum_posts", PostLive.Index, :index
-    live "/forum_posts/new", PostLive.Index, :new
-    live "/forum_posts/:id/edit", PostLive.Index, :edit
-
-    live "/forum_posts/:id", PostLive.Show, :show
-    live "/forum_posts/:id/show/edit", PostLive.Show, :edit
 
   end
 
@@ -93,6 +73,27 @@ defmodule SmolForumWeb.Router do
 
 
       live "/forum_boards/:id/new_thread", BoardLive.Show, :new_thread
+
+    live "/forum_boards", BoardLive.Index, :index
+    live "/forum_boards/new", BoardLive.Index, :new
+    live "/forum_boards/:id/edit", BoardLive.Index, :edit
+
+    live "/forum_boards/:id", BoardLive.Show, :show
+    live "/forum_boards/:id/show/edit", BoardLive.Show, :edit
+
+    live "/forum_threads", ThreadLive.Index, :index
+    live "/forum_threads/new", ThreadLive.Index, :new
+    live "/forum_threads/:id/edit", ThreadLive.Index, :edit
+
+    live "/forum_threads/:id", ThreadLive.Show, :show
+    live "/forum_threads/:id/show/edit", ThreadLive.Show, :edit
+
+    live "/forum_posts", PostLive.Index, :index
+    live "/forum_posts/new", PostLive.Index, :new
+    live "/forum_posts/:id/edit", PostLive.Index, :edit
+
+    live "/forum_posts/:id", PostLive.Show, :show
+    live "/forum_posts/:id/show/edit", PostLive.Show, :edit
     end
   end
 
